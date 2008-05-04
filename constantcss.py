@@ -7,7 +7,7 @@ pp = pprint.PrettyPrinter(indent=4)
 
 class CssWithConstants:
 	data = None
-	parameters = {}
+	parameters = []
 	
 	def __init__(self, url=None):
 		# print url
@@ -27,13 +27,11 @@ class CssWithConstants:
 			for definition in definitions:
 				marker_value_re = re.compile('^\s*(\w*)\s*(.*?)\s*$', re.S)
 				pair = marker_value_re.search(definition).groups()
-				# pp.pprint(pair)
-				self.parameters[pair[0]] = pair[1];
-		# pp.pprint(self.parameters)
+				self.parameters.append(pair)
 		
 	def final(self):
 		result = self.data
-		for key, value in self.parameters.iteritems():
+		for (key, value) in self.parameters:
 			print key
 			replacement = re.compile('/\*'+key+'\*/.*?/\*'+key+'\*/', re.S)
 			result = replacement.sub('/*'+key+'*/'+value+'/*'+key+'*/',result)
