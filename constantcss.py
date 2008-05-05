@@ -8,12 +8,11 @@ pp = pprint.PrettyPrinter(indent=4)
 class CssWithConstants:
 	data = None
 	parameters = []
+	override_parameters = {}
 	
 	def __init__(self, url=None):
-		# print url
-		self.data = urllib.urlopen(url).read()
-		# print data
-		
+		fh = open (url, 'r')
+		self.data = fh.read()
 		parameters = self.extract_parameters()
 		
 	def extract_parameters(self):
@@ -28,11 +27,15 @@ class CssWithConstants:
 				marker_value_re = re.compile('^\s*(\w*)\s*(.*?)\s*$', re.S)
 				pair = marker_value_re.search(definition).groups()
 				self.parameters.append(pair)
+	
+	def set_override(self, key, value):
+		self.override_parameters[key] = value
 		
 	def final(self):
 		result = self.data
 		for (key, value) in self.parameters:
-			print key
+			if self.override_parameters.has_key(key):
+				value = self.override_parameters[key]
 			replacement = re.compile('/\*'+key+'\*/.*?/\*'+key+'\*/', re.S)
 			result = replacement.sub('/*'+key+'*/'+value+'/*'+key+'*/',result)
 		return result

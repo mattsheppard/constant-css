@@ -1,3 +1,5 @@
 Create a test suite, and harness to allow different language implementations to be tested.
 
 Add a version number to the file format
+
+Read parameters (with some prefix) from the referrer
