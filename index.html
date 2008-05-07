@@ -1,0 +1,15 @@
+<html>
+	<head>
+		<link type="text/css" rel="stylesheet" href="/stylesheets/main.css">
+	</head>
+	<body>
+		<ul>
+		{% for css in csses %}
+			<li>{{ css.name }} [<a href="edit_css?key={{css.key}}">edit</a>] [<a href="display_css?key={{css.key}}">display</a>]</li>
+		{% endfor %}
+		</ul>
+		<a href="/edit_css">New CSS</a>
+		
+		<a href="{{ url }}">{{ url_linktext }}</a>
+	</body>
+</html>

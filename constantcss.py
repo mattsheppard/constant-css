@@ -10,10 +10,12 @@ class CssWithConstants:
 	parameters = []
 	override_parameters = {}
 	
-	def __init__(self, url=None):
-		fh = open (url, 'r')
-		self.data = fh.read()
-		parameters = self.extract_parameters()
+	def __init__(self, content=None):
+        # def __init__(self, url=None):
+                # fh = open (url, 'r')
+                # self.data = fh.read()
+                self.data = content
+                parameters = self.extract_parameters()
 		
 	def extract_parameters(self):
 		# print self.data
@@ -41,8 +43,8 @@ class CssWithConstants:
 		return result
 		
 def main():
-	css = CssWithConstants('example.css')
-	print css.final()
+    css = CssWithConstants('example.css')
+    print css.final()
 
 if __name__ == '__main__':
 	main()

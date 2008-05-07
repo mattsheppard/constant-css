@@ -3,3 +3,5 @@ Create a test suite, and harness to allow different language implementations to 
 Add a version number to the file format
 
 Read parameters (with some prefix) from the referrer
+
+Ability to store CSS files on a per user basis (and for the user to select a file via CGI somehow)
