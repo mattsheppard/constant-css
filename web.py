@@ -13,8 +13,13 @@ class StoredCss(db.Model):
     content = db.StringProperty(multiline=True)
     last_edited = db.DateTimeProperty(auto_now_add=True)
         
+class HomePage(webapp.RequestHandler):
+        def get(self):
+            path = os.path.join(os.path.dirname(__file__), 'index.html')
+            self.response.out.write(template.render(path, {}))
 
-class MainPage(webapp.RequestHandler):
+
+class ListPage(webapp.RequestHandler):
     def get(self):
         user = users.get_current_user()
         
@@ -32,7 +37,7 @@ class MainPage(webapp.RequestHandler):
                         'url': url,
                         'url_linktext': url_linktext
                         }
-                path = os.path.join(os.path.dirname(__file__), 'index.html')
+                path = os.path.join(os.path.dirname(__file__), 'css_list.html')
                 self.response.out.write(template.render(path, template_values))
         else:
                 self.redirect(users.create_login_url(self.request.uri))
@@ -89,7 +94,9 @@ class DisplayCss(webapp.RequestHandler):
 
 
 def main():
-    application = webapp.WSGIApplication([('/', MainPage),
+    application = webapp.WSGIApplication([
+                ('/', HomePage),
+                ('/list_css', ListPage),
                 ('/display_css', DisplayCss),
                 ('/add_css', SaveCss),
                 ('/edit_css', EditCss)],

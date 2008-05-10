@@ -1,9 +1,6 @@
-<html>
-	<head>
-		<link type="text/css" rel="stylesheet" href="/stylesheets/main.css">
-	</head>
-	<body>
+{% extends "base.html" %}
 
+{% block content %}
 		<form action="/add_css" method="post">
 			{% if already_exists %}
 				<input type="hidden" name="key" value="{{ css.key }}" />
@@ -13,5 +10,4 @@
 
 			<div><input type="submit" value="Save CSS"></div>
 		</form>
-	</body>
-</html>
+{%endblock%}

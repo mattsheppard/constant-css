@@ -1,0 +1,23 @@
+#site_branding {
+        text-align: center;
+}
+
+#navigation {
+        text-align: center;
+}
+
+#navigation ul {
+        list-style: none;
+}
+
+#navigation li {
+        display: inline;
+}
+
+#main_content {
+}
+
+div.code {
+        font-family: monospace;
+        white-space: pre;
+}
