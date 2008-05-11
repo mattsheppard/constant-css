@@ -3,7 +3,7 @@
 {% block content %}
 		<form action="/add_css" method="post">
 			{% if already_exists %}
-				<input type="hidden" name="key" value="{{ css.key }}" />
+				<input type="hidden" name="css_key" value="{{ css.key }}" />
 			{% endif %}
 			<div>Name : <input name="name" value="{{ css.name }}" /></div>
 			<div>Content : <textarea rows="40" cols="80" name="content">{{ css.content }}</textarea></div>

@@ -21,13 +21,7 @@ class AbstractPage(webapp.RequestHandler):
         primary_css = None
         primary_css_exists = False
     
-        def get(self):
-                self.handle_request();
-    
-        def post(self):
-                self.handle_request();
-    
-        def handle_request(self):
+        def prepare_request(self):
                 user = users.get_current_user()
             
                 if users.get_current_user():
@@ -42,13 +36,13 @@ class AbstractPage(webapp.RequestHandler):
                 css_key = self.request.get('css_key')
                 if css_key:
                         self.primary_css = StoredCss.get(css_key)
-                        primary_css_exists = True
+                        self.primary_css_exists = True
                 else:
                         # Create an empty stub
                         self.primary_css = StoredCss()
                         self.primary_css.content = ""
                         self.primary_css.name = ""
-                        primary_css_exists = False
+                        self.primary_css_exists = False
 
         def require_login(self):
                 if not self.user_is_logged_in:
@@ -57,15 +51,17 @@ class AbstractPage(webapp.RequestHandler):
                 return True
 
 
-class HomePage(webapp.RequestHandler):
+class HomePage(AbstractPage):
         def get(self):
-            path = os.path.join(os.path.dirname(__file__), 'index.html')
-            self.response.out.write(template.render(path, {}))
+                AbstractPage.prepare_request(self)
+                
+                path = os.path.join(os.path.dirname(__file__), 'index.html')
+                self.response.out.write(template.render(path, self.template_values))
 
 
 class ListPage(AbstractPage):
         def get(self):
-	        AbstractPage.get(self)
+	        AbstractPage.prepare_request(self)
 	        if not self.require_login():
 	                return
                 
@@ -78,7 +74,7 @@ class ListPage(AbstractPage):
 
 class EditCss(AbstractPage):
 	def get(self):
-	        AbstractPage.get(self)
+	        AbstractPage.prepare_request(self)
 	        if not self.require_login():
 	                return
 		
@@ -89,45 +85,39 @@ class EditCss(AbstractPage):
 		self.response.out.write(template.render(path, self.template_values))
 
 
-class SaveCss(webapp.RequestHandler):
+class SaveCss(AbstractPage):
 	def post(self):
-		if self.request.get('key'):
-			css = StoredCss.get(self.request.get('key'))
-		else:
-			css = StoredCss()
+	        AbstractPage.prepare_request(self)
+	        if not self.require_login():
+	                return
+	        
+	        if self.primary_css_exists:
+	                if self.primary_css.owner != users.get_current_user():
+	                        print "Error - that CSS is not yours!"
+	                        return
+	        
+		self.primary_css.owner = users.get_current_user()
+                self.primary_css.name = self.request.get('name')
+		self.primary_css.content = self.request.get('content')
 		
-		if users.get_current_user():
-			css.owner = users.get_current_user()
-                
-                css.name = self.request.get('name')
-		css.content = self.request.get('content')
-		
-		css.put()
+		self.primary_css.put()
 		self.redirect('/list_css')
 
-class DisplayCss(webapp.RequestHandler):
+class DisplayCss(AbstractPage):
 	def get(self):
-	        user = users.get_current_user()
-                
-                if not users.get_current_user():
-                        self.redirect(users.create_login_url(self.request.uri))
-                        return
-		
-		if self.request.get('key'):
-			css = StoredCss.get(self.request.get('key'))
-		else:
-			self.redirect('/')
-			return
-                
+	        AbstractPage.prepare_request(self)
+	        if not self.require_login():
+	                return
+	        
                 self.response.headers['Content-Type'] = 'text/plain'
-                css = constantcss.CssWithConstants(css.content)
+                css = constantcss.CssWithConstants(self.primary_css.content)
                 
                 for (key, value) in self.request.GET.items():
-                    css.set_override(key, value)
+                        css.set_override(key, value)
                 
                 referrer = Request.blank(self.request.referer)
                 for (key, value) in referrer.GET.items():
-                    css.set_override(key, value)
+                        css.set_override(key, value)
                 
                 self.response.out.write(css.final())
 
