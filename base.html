@@ -11,13 +11,13 @@
 
 <body>
 	<div id="site_branding">
-		<img src="resources/constant_css.png"><br />
+		<a href="/"><img src="resources/constant_css.png"></a><br />
 		If you stumbled across this, it's still under development and probably doesn't work yet...
 	</div>
 	<div id="navigation">
 		{% block navigation %}
 		<ul>
-			<li><a href="list_css">Login</a></li>
+			<li><a href="{{login_logout_url}}">{{login_logout_linktext}}</a></li>
 		</ul>
 		{% endblock %}
 	</div>
