@@ -20,15 +20,17 @@ class CssWithConstants:
 	def extract_parameters(self):
 		# print self.data
 		definition_blocks = re.compile('/\*\s*@cssconstants(.*?)\*/', re.S)
-		groups = definition_blocks.search(self.data).groups()
-		# pp.pprint(groups)
-		for group in groups:
-			definition_split_re = re.compile('@define')
-			definitions = definition_split_re.split(group)
-			for definition in definitions:
-				marker_value_re = re.compile('^\s*(\w*)\s*(.*?)\s*$', re.S)
-				pair = marker_value_re.search(definition).groups()
-				self.parameters.append(pair)
+                matches = definition_blocks.search(self.data)
+                if (matches):
+        		groups = matches.groups()
+        		# pp.pprint(groups)
+        		for group in groups:
+        			definition_split_re = re.compile('@define')
+        			definitions = definition_split_re.split(group)
+        			for definition in definitions:
+        				marker_value_re = re.compile('^\s*(\w*)\s*(.*?)\s*$', re.S)
+        				pair = marker_value_re.search(definition).groups()
+        				self.parameters.append(pair)
 	
 	def set_override(self, key, value):
 		self.override_parameters[key] = value
