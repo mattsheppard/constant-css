@@ -24,7 +24,7 @@ class AbstractPage(webapp.RequestHandler):
         def prepare_request(self):
                 user = users.get_current_user()
             
-                if users.get_current_user():
+                if user:
                         self.user_is_logged_in = True;
                         self.template_values['login_logout_url'] = users.create_logout_url('/')
                         self.template_values['login_logout_linktext'] = 'Logout'
@@ -32,6 +32,8 @@ class AbstractPage(webapp.RequestHandler):
                         self.user_is_logged_in = False;
                         self.template_values['login_logout_url'] = users.create_login_url(self.request.uri)
                         self.template_values['login_logout_linktext'] = 'Login'
+                        
+                self.template_values['user_is_logged_in'] = self.user_is_logged_in
             
                 css_key = self.request.get('css_key')
                 if css_key:
@@ -50,6 +52,11 @@ class AbstractPage(webapp.RequestHandler):
                         return False
                 return True
 
+        def require_css_owner(self):
+                if self.primary_css_exists and (self.primary_css.owner != users.get_current_user()):
+                        self.redirect('/')
+                        return False
+                return True
 
 class HomePage(AbstractPage):
         def get(self):
@@ -75,7 +82,7 @@ class ListPage(AbstractPage):
 class EditCss(AbstractPage):
 	def get(self):
 	        AbstractPage.prepare_request(self)
-	        if not self.require_login():
+	        if (not self.require_login()) or (not self.require_css_owner()):
 	                return
 		
 		self.template_values['css'] = self.primary_css
@@ -88,13 +95,8 @@ class EditCss(AbstractPage):
 class SaveCss(AbstractPage):
 	def post(self):
 	        AbstractPage.prepare_request(self)
-	        if not self.require_login():
+	        if (not self.require_login()) or (not self.require_css_owner()):
 	                return
-	        
-	        if self.primary_css_exists:
-	                if self.primary_css.owner != users.get_current_user():
-	                        print "Error - that CSS is not yours!"
-	                        return
 	        
 		self.primary_css.owner = users.get_current_user()
                 self.primary_css.name = self.request.get('name')
@@ -106,7 +108,7 @@ class SaveCss(AbstractPage):
 class DisplayCss(AbstractPage):
 	def get(self):
 	        AbstractPage.prepare_request(self)
-	        if not self.require_login():
+	        if (not self.require_login()) or (not self.require_css_owner()):
 	                return
 	        
                 self.response.headers['Content-Type'] = 'text/plain'

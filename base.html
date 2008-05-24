@@ -17,6 +17,9 @@
 	<div id="navigation">
 		{% block navigation %}
 		<ul>
+			{% if user_is_logged_in %}
+				<li><a href="list_css">My CSS list</a></li>
+			{% endif %}
 			<li><a href="{{login_logout_url}}">{{login_logout_linktext}}</a></li>
 		</ul>
 		{% endblock %}

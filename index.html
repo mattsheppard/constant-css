@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-		<p>Constant CSS is a site to help you organise and tweak CSS files. CSS has no mechanism for declaring a colour or a font size in a single place, so Constant CSS defines a simple syntax for declaring and using constants. To assist with tweaking your display, Constant CSS also provides an easy way to test changes to your constant's values.</p>
+		<p>Constant CSS is a site to help you standardise and tweak CSS files.</p>
+		<p>CSS has no mechanism for declaring a colour or a font size in a single place, so Constant CSS defines a simple syntax for declaring and using constants. To assist with tweaking your display, Constant CSS also provides an easy way to test changes to your constant's values.</p>
 		<div class="code">
 /* @cssconstants
 @define NORMAL_FONT_SIZE 10pt
@@ -11,8 +12,8 @@ p {
 	font-size: /*NORMAL_FONT_SIZE*/10pt/*NORMAL_FONT_SIZE*/;
 }
 		</div>
-		<p>
-			Above is a very simple example of the Constant CSS syntax. Here, we define that the normal font size should be 10pt, and then we use that definition to set the paragraph font size. Something to note is that the Constant CSS syntax is still valid CSS; all the constant handling is performed from within CSS comments. Programmers will also notice that the syntax is very simple, making it a simple system to implement even without the tools available here.
+		<p>Above is a very simple example of the Constant CSS syntax. Here, we define that the normal font size should be 10pt, and then we use that definition to set the paragraph font size.</p>
+		<p>Something to note is that the Constant CSS syntax is still valid CSS since all the constant handling is performed from within CSS comments. Programmers will also notice that the syntax is very simple, making it a simple system to implement even without the tools available here.
 		</p>
 {% endblock %}
 
