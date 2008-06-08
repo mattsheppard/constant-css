@@ -54,16 +54,13 @@ class AbstractPage(webapp.RequestHandler):
 
         def require_css_owner(self):
                 if self.primary_css_exists and (self.primary_css.owner != users.get_current_user()):
-                        self.redirect('/')
+                        self.redirect('http://www.constantcss.com/')
                         return False
                 return True
 
 class HomePage(AbstractPage):
         def get(self):
-                AbstractPage.prepare_request(self)
-                
-                path = os.path.join(os.path.dirname(__file__), 'index.html')
-                self.response.out.write(template.render(path, self.template_values))
+                self.redirect('http://www.constantcss.com/')
 
 
 class ListPage(AbstractPage):
