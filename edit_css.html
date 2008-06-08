@@ -6,8 +6,24 @@
 				<input type="hidden" name="css_key" value="{{ css.key }}" />
 			{% endif %}
 			<div>Name : <input name="name" value="{{ css.name }}" /></div>
-			<div>Content : <textarea rows="25" cols="50" name="content">{{ css.content }}</textarea></div>
+			<div style="padding-top: 1em"><textarea rows="25" cols="55" name="content" wrap="off">{{ css.content }}</textarea></div>
+						
+			<div style="padding-top: 1em"><input type="submit" value="Save CSS"></div>
 
-			<div><input type="submit" value="Save CSS"></div>
 		</form>
+{%endblock%}
+
+{% block below_navigation %}
+<div style="padding-top: 3em">
+<p>Syntax example</p>
+<pre>/* @cssconstants
+    @define NAME value
+    @define MULTI_LINE
+    value
+*/
+
+p {
+    property: /*NAME*/any value/*NAME*/;
+}
+</pre></div>
 {%endblock%}
